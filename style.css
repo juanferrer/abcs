@@ -17,5 +17,5 @@ body {
 .display-letter {
     color: hsl(0, 0%, 20%);
     font-size: 20vh;
-    transition: content
+    user-select: none;
 }
