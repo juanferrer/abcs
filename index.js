@@ -28,7 +28,7 @@ let lerp = (start, end, value) => {
     return start + value * (end - start);
 };
 
-window.onload = () => {
+window.addEventListener("load", () => {
     initialise();
     // Prepare for keypresses
     document.body.addEventListener("keydown", e => {
@@ -38,4 +38,4 @@ window.onload = () => {
             displayLetter.innerHTML = letters[e.keyCode].letter;
         }
     });
-};
+});
