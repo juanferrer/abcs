@@ -13,14 +13,14 @@ let initialiseNumbers = () => {
     }
 };
 
-function numberPressed(e) {
-    if (modes[modeIndex] === NUMBERS) {
+let numberPressed = (e) => {
+    if (characterMode[characterModeIndex] === NUMBERS) {
         let num = parseInt(e.key);
         let number = numbers[num];
         if (numbers[num]) {
             // We have a number, replace the number for the one used
             display.style.backgroundColor = `hsl(${number.colour}, 60%, 60%)`;
-            displayCharacter.innerHTML = number.number;
+            characterDisplay.innerHTML = number.number;
         }
     }
 }

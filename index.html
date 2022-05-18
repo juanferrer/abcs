@@ -11,10 +11,17 @@
 
 <body>
     <div class="display" id="display">
-        <div class="display-character" id="display-character">A</div>
+        <div class="character-display" id="character-display">A</div>
+        <div hidden class="text-display" id="text-display">
+            <span class="written-text" id="written-text"></span>
+            <span class="remaining-text" id="remaining-text">CATATONIC</span>
+        </div>
     </div>
 
-    <div class="button" id="mode-change-button">0</div>
+    <div class="options" id="options">
+        <div class="button" id="character-mode-change-button">0</div>
+        <div class="button" id="write-mode-change-button">---</div>
+    </div>
 
     <script src="scripts/letters.js"></script>
     <script src="scripts/numbers.js"></script>

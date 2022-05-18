@@ -9,21 +9,73 @@ let lerp = (start, end, value) => {
     return start + value * (end - start);
 };
 
-let display, displayCharacter, modeChangeButton;
+/**
+ * Get a random integer in the range [min, max]
+ * @param {Number} min 
+ * @param {Number} max 
+ * @returns {Number}
+ */
+let randomInt = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+/**
+ * Shake an HTML element for the duration
+ * @param {HTMLElement} element 
+ * @param {Number} duration ms
+ */
+let shakeElement = (element, duration) => {
+    element.classList.add("shake");
+
+    window.setTimeout(() => {
+        element.classList.remove("shake");
+    }, duration);
+};
+
+let display, characterDisplay, textDisplay,
+characterModeChangeButton, writeModeChangeButton,
+writtenTextSpan, remainingTextSpan;
 
 // Mode definitions
 const NUMBERS = Symbol("NUMBERS");
 const LETTERS = Symbol("LETTERS");
-let modes = [LETTERS, NUMBERS];
+let characterMode = [LETTERS, NUMBERS];
+let characterModeIndex = 0;
 
-let modeIndex = 0;
+const CHARACTER = Symbol("CHARACTER");
+const TEXT = Symbol("TEXT");
+let writeMode = [CHARACTER, TEXT];
+let writeModeIndex = 0;
 
-window.addEventListener("load", () => {
+function changeDisplay(type) {
+    switch (type) {
+        case CHARACTER:
+            characterDisplay.hidden = false;
+            textDisplay.hidden = true;
+            break;
+        case TEXT:
+            characterDisplay.hidden = true;
+            textDisplay.hidden = false;
+            break;
+    }
+}
+
+window.addEventListener("load", async () => {
     // Get variables
     display = document.getElementById("display");
-    displayCharacter = document.getElementById("display-character");
-    modeChangeButton = document.getElementById("mode-change-button");
+    characterDisplay = document.getElementById("character-display");
+    textDisplay = document.getElementById("text-display");
+    characterModeChangeButton = document.getElementById("character-mode-change-button");
+    writeModeChangeButton = document.getElementById("write-mode-change-button");
+    writtenTextSpan = document.getElementById("written-text");
+    remainingTextSpan = document.getElementById("remaining-text");
 
+    initialiseWords("en").then(() => {
+        // Load a word, so that it's there when the user changes
+        remainingTextSpan.innerHTML = words[randomInt(0, words.length)];
+    });
     initialiseLetters();
     initialiseNumbers();
 
@@ -31,14 +83,24 @@ window.addEventListener("load", () => {
     document.addEventListener("keydown", letterPressed);
     document.addEventListener("keydown", numberPressed);
 
-    modeChangeButton.addEventListener("click", () => {
+    characterModeChangeButton.addEventListener("click", () => {
         // Cycle through modes
-        modeIndex++;
-        modeIndex = modeIndex % modes.length;
+        characterModeIndex++;
+        characterModeIndex = characterModeIndex % characterMode.length;
 
         // Now, depending on the current mode, set the default values
-        document.dispatchEvent(new KeyboardEvent("keydown", {"key":  modes[modeIndex] === LETTERS ? "A" : "0" }))
-        modeChangeButton.innerHTML = modes[modeIndex] === LETTERS ? "0" : "A";
+        document.dispatchEvent(new KeyboardEvent("keydown", {"key":  characterMode[characterModeIndex] === LETTERS ? "A" : "0" }))
+        characterModeChangeButton.innerHTML = characterMode[characterModeIndex] === LETTERS ? "0" : "A";
+    });
+
+    writeModeChangeButton.addEventListener("click", async () => {
+        // Cycle through modes
+        writeModeIndex++;
+        writeModeIndex = writeModeIndex % writeMode.length;
+
+        // Set default values and hide
+        changeDisplay(writeMode[writeModeIndex]);
+        writeModeChangeButton.innerHTML = writeMode[writeModeIndex] === CHARACTER ? "---" : "-";
     });
 });
 
